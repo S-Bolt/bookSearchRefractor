@@ -32,7 +32,7 @@ module.exports = {
             return { token, user };
         },
         //adding user
-        addUser: async (parent, args, context) => {
+        addUser: async (parent, args) => {
             const user = await User.create(args);
 
             if(!user){
@@ -42,17 +42,31 @@ module.exports = {
             const token = signToken(user);
             return { token, user};
         },
-
+        //saving a book to user
         saveBook: async (parent , args, context) => {
             if (context.user) {
-                const updatedUser = await User.findOnAndUpdate(
+                const updatedUser = await User.findOneAndUpdate(
                     { _id: user._id},
                     { $addToSet: {savedBooks: args.body}},
                     { new: true, runValidators: true }
-                )
+                ).populate('savedBooks')
+                return updatedUser;
             }
-        }
+            throw AuthenticationError('Your are not authenticated');
+        },
+        // deleting a book from user
+        removeBook: async (parent, { bookId}, context) => {
+            if (context.user) {
+                const updatedUser = await User.findOneAndUpdate(
+                    { _id: context.user._id},
+                    { $pull: {savedBooks: { bookId}}},
+                    { new: true}
+                ).populate('savedBooks');
+                return updatedUser;
+            }
+            throw AuthenticationError("You are not authenticated");
+        },
     }
-    
+};
 
-}
+module.exports = resolvers;
