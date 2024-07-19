@@ -1,3 +1,4 @@
+
 const typeDefs = `
     type Query {
         me: User
@@ -26,6 +27,15 @@ const typeDefs = `
         image: String
         link: String
     }
+
+    input BookInput {
+        bookId: ID!
+        authors: [String]
+        title: String
+        description: String
+        image: String
+        link: String
+  }
 
     type Auth {
         token: ID!

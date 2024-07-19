@@ -1,8 +1,8 @@
 //import dependencies
 const { signToken, AuthenticationError } = require('../utils/auth');
-const { User } = require('./models');
+const { User } = require('../models');
 
-module.exports = {
+const resolvers = {
     Query:{
         //get the user/saved books
         me: async (parent, args, context) => {
